@@ -17,10 +17,33 @@ def write_csv(d):
         pass
 
 
-def get_page(html):
+def get_page(html):    # функция собрала карточки телефонов на странице
     soup = BeautifulSoup(html, 'lxml')
-    colums = soup.find_all('div', class_ = 'columns product-Wrap card-wrapper')
-    print(len(colums))
+    
+    cards = soup.find_all('div', class_ = 'columns product-Wrap card-wrapper')
+    
+    cnt = 0
+    for card in cards:
+        cnt += 1
+
+        try:    # есил инфо.нет, исключение ловится
+            name = card.find('b', class_='nc').text
+        except:
+            name = ''
+
+        try:
+            price = card.find('p', class_='card__price-actual').get('title')
+            price_data_clear = price.replace('Цена:', '').replace('грн', '').replace(' ', '')
+        except:
+            price = ''
+
+        try:
+            url = 'https://epicentrk.ua' + card.find('a', class_='custom-link custom-link--big custom-link--inverted custom-link--blue').get('href')
+        except:
+            url = ''
+        print(cnt, url)
+
+        
 
 
 
