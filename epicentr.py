@@ -19,7 +19,9 @@ def write_csv(d):
 
 def get_page(html):
     soup = BeautifulSoup(html, 'lxml')
-    
+    colums = soup.find_all('div', class_ = 'columns product-Wrap card-wrapper')
+    print(len(colums))
+
 
 
 
