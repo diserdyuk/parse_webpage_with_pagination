@@ -11,11 +11,19 @@ def get_html(url):    # функ.получает код html по url из фу
     print(r.status_code)
 
 
-def write_csv(d):
+def write_csv(d):    # функц.записывает спарс.данные в csv
     with open('epicentr_phones.csv', 'a') as f:
         write = csv.writer(f)
-        pass
+        write.writerow((d['name'],
+                        d['price'],
+                        d['url']))
 
+
+def clear_data(s):    # функц.удаляет все лишние данные кроме цифр
+    # Цена: 3 599 грн
+    s = s.split()[1:-1]
+    return ''.join(s)
+    
 
 def get_page(html):    # функция собрала карточки телефонов на странице
     soup = BeautifulSoup(html, 'lxml')
@@ -24,7 +32,7 @@ def get_page(html):    # функция собрала карточки теле
     
     cnt = 0
     for card in cards:
-        cnt += 1
+        cnt += 1    # для отслеживания кол-ва спарсенных данных
 
         try:    # есил инфо.нет, исключение ловится
             name = card.find('b', class_='nc').text
@@ -32,18 +40,23 @@ def get_page(html):    # функция собрала карточки теле
             name = ''
 
         try:
-            price = card.find('p', class_='card__price-actual').get('title')
-            price_data_clear = price.replace('Цена:', '').replace('грн', '').replace(' ', '')
+            prices = card.find('p', class_='card__price-actual').get('title')
+            # price_data_clear = price.replace('Цена:', '').replace('грн', '').replace(' ', '')    # 2й вар.очистки данных
+            price = clear_data(prices)
         except:
-            price = ''
+            prices = ''
 
         try:
             url = 'https://epicentrk.ua' + card.find('a', class_='custom-link custom-link--big custom-link--inverted custom-link--blue').get('href')
         except:
             url = ''
-        print(cnt, url)
 
-        
+
+        data = {'name': name,    # словарь, в которы собираются все спарсенные данные
+                'price': price,
+                'url': url}
+
+        write_csv(data)    # функц.записывает данные в csv
 
 
 
