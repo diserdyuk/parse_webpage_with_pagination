@@ -60,10 +60,18 @@ def get_page(html):    # функция собрала карточки теле
 
 
 
+# pages
+# 1 https://epicentrk.ua/shop/smartfony-i-mobilnye-telefony/?PAGEN_1=1
+# 4 https://epicentrk.ua/shop/smartfony-i-mobilnye-telefony/?PAGEN_1=4
+
+
 
 def main():    # фукц.в которой собираются др.функции
-    url = 'https://epicentrk.ua/shop/smartfony-i-mobilnye-telefony/'
-    get_page(get_html(url))
+    url = 'https://epicentrk.ua/shop/smartfony-i-mobilnye-telefony/?PAGEN_1={}'    # новая ссылка, для парсинга послед.страниц
+    
+    for i in range(1, 6):    # цикл генерит цифры от 1 до 6
+        url_pattern = url.format(str(i))    # цифры подставл.через метод format
+        get_page(get_html(url_pattern))
 
 
 if __name__ == '__main__':    # точка входа
